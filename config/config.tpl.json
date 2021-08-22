@@ -1,0 +1,27 @@
+{
+    // {{if eq .cache "redis"}}
+    "redis": {
+        "host": "localhost:6379",
+        "maxIdle": 50,
+        "maxActive": 10000,
+        "cache_db": 1
+    },
+    // {{end}}
+    // {{if eq .database "mongo"}}
+    "database": {
+        "name": "// {{.name}}",
+        "ttl": 10
+    },
+    // {{end}}
+    // {{if eq .database "mysql"}}
+    "database": {
+        "name": "// {{.name}}"
+    },
+    // {{end}}
+    // {{if eq .web "y"}}
+    "web": {
+        "port": ":8888"
+    },
+    // {{end}}
+    "prod": false
+}
