@@ -1,7 +1,6 @@
 package app
 
 import (
-	"io"
 	"os"
 
 	cstorage "github.com/bopher/cliutils/storage"
@@ -10,22 +9,41 @@ import (
 
 // SetupLogger driver
 func SetupLogger() {
-	writers := make([]io.Writer, 0)
-	writers = append(writers, logger.NewFileLogger("./.logs/log", "// {{.name}}", "2006-01-02", DateFormatter()))
-	if !Config().Bool("prod", false) {
-		writers = append(writers, os.Stdout)
-	}
-	if l := logger.NewLogger("2006-01-02 15:04:05", DateFormatter(), writers...); l != nil {
-		_container.Register("--APP-LOGGER", l)
-	} else {
-		panic("failed to build crypto driver")
-	}
+	conf := confOrPanic()
+	appName := conf.Cast("name").StringSafe("// {{.name}}")
+	onDev := !conf.Cast("prod").BoolSafe(true)
 
-	_cli.AddCommand(cstorage.ClearCommand("./.logs"))
+	// Crash logger
+	_crLogger := logger.NewLogger("2006-01-02 15:04:05", DateFormatter())
+	_crLogger.AddWriter("main", logger.NewFileLogger(LogPath("error"), "crash", "2006-01-02", DateFormatter()))
+	if onDev {
+		_crLogger.AddWriter("dev", os.Stdout)
+	}
+	_container.Register("crash_logger", _crLogger)
+
+	// Error logger
+	_erLogger := logger.NewLogger("2006-01-02 15:04:05", DateFormatter())
+	_erLogger.AddWriter("main", logger.NewFileLogger(LogPath("error"), "error", "2006-01-02", DateFormatter()))
+	if onDev {
+		_erLogger.AddWriter("dev", os.Stdout)
+	}
+	_container.Register("error_logger", _erLogger)
+
+	// Default logger
+	_logger := logger.NewLogger("2006-01-02 15:04:05", DateFormatter())
+	_logger.AddWriter("main", logger.NewFileLogger(LogPath("log"), appName, "2006-01-02", DateFormatter()))
+	if onDev {
+		_logger.AddWriter("dev", os.Stdout)
+	}
+	_container.Register("--APP-LOGGER", _logger)
+
+	// Cli clear command
+	_cli.AddCommand(cstorage.ClearCommand(LogPath()))
 }
 
 // Logger get logger driver
 // leave name empty to resolve default
+// pre defined loggers are crash_logger and error_logger
 func Logger(names ...string) logger.Logger {
 	name := "--APP-LOGGER"
 	if len(names) > 0 {

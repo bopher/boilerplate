@@ -5,24 +5,24 @@ import "github.com/bopher/config"
 // SetupConfig driver
 func SetupConfig() {
 	// {{if eq .config "env"}}
-	if c, ok := config.NewEnvConfig("./config/config.env"); ok {
+	if c, err := config.NewEnvConfig(ConfigPath("config.env")); err == nil {
 		_container.Register("--APP-CONFIG", c)
 	} else {
-		panic("failed to build config driver")
+		panic(err)
 	}
 	// {{end}}
 	// {{if eq .config "json"}}
-	if c, ok := config.NewJSONConfig("./config/config.json"); ok {
+	if c, err := config.NewJSONConfig(ConfigPath("config.json")); err == nil {
 		_container.Register("--APP-CONFIG", c)
 	} else {
-		panic("failed to build config driver")
+		panic(err)
 	}
 	// {{end}}
 	// {{if eq .config "memory"}}
-	if c, ok := config.NewMemoryConfig(nil); ok {
+	if c, err := config.NewMemoryConfig(nil); err == nil {
 		_container.Register("--APP-CONFIG", c)
 	} else {
-		panic("failed to build config driver")
+		panic(err)
 	}
 	// {{end}}
 }

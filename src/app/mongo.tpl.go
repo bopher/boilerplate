@@ -11,7 +11,10 @@ import (
 // SetupMongoDB driver
 func SetupMongoDB() {
 	conf := Config()
-	if client, err := mongo.NewClient(options.Client().ApplyURI(conf.String("mongo.conStr", ""))); err != nil {
+	host := conf.Cast("mongo.conStr").StringSafe("")
+	db := conf.Cast("database.name").StringSafe("// {{.name}}")
+
+	if client, err := mongo.NewClient(options.Client().ApplyURI(host)); err != nil {
 		panic(err)
 	} else {
 		ctx, cancel := MongoOperationCtx()
@@ -19,7 +22,7 @@ func SetupMongoDB() {
 		if err := client.Connect(ctx); err != nil {
 			panic(err)
 		} else {
-			db := client.Database(conf.String("database.name", ""))
+			db := client.Database(db)
 			_container.Register("--APP-MONGO-CLIENT", client)
 			_container.Register("--APP-MONGO-DB", db)
 		}
@@ -58,6 +61,7 @@ func MongoDB(names ...string) *mongo.Database {
 
 // MongoOperationCtx create context for mongo db operations
 func MongoOperationCtx() (context.Context, context.CancelFunc) {
-	ttl := Config().Int("database.ttl", 10)
-	return context.WithTimeout(context.Background(), time.Duration(ttl)*time.Second)
+	conf := Config()
+	ttl := conf.Cast("database.ttl").IntSafe(10)
+	return context.WithTimeout(context.TODO(), time.Duration(ttl)*time.Second)
 }

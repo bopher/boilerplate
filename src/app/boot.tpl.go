@@ -1,13 +1,11 @@
 package app
 
 import (
-	"os"
 	"runtime/debug"
 	"time"
 
 	"github.com/bopher/cli"
 	"github.com/bopher/container"
-	"github.com/bopher/logger"
 )
 
 var _container container.Container
@@ -32,23 +30,15 @@ func CLI() cli.CLI {
 func Run() {
 	defer func() {
 		if r := recover(); r != nil {
-			erLogger := logger.NewLogger(
-				"2006-01-02 15:04:05",
-				DateFormatter(),
-				logger.NewFileLogger(
-					"./.logs/error",
-					"crash",
-					"2006-01-02",
-					DateFormatter(),
-				),
-				os.Stdout,
-			)
-			erLogger.Divider("=", 100, "APP CRASHED")
-			erLogger.Error().Print("%v", r)
-			erLogger.Raw("\n\nStacktrace:\n")
-			erLogger.Raw(string(debug.Stack()))
-			erLogger.Divider("=", 100, DateFormatter()(time.Now().UTC(), "2006-01-02 15:04:05"))
-			erLogger.Raw("\n\n")
+			logger := Logger("crash_logger")
+			if logger != nil {
+				logger.Divider("=", 100, "APP CRASHED")
+				logger.Error().Print("%v", r)
+				logger.Raw("\n\nStacktrace:\n")
+				logger.Raw(string(debug.Stack()))
+				logger.Divider("=", 100, DateFormatter()(time.Now().UTC(), "2006-01-02 15:04:05"))
+				logger.Raw("\n\n")
+			}
 		}
 	}()
 	_cli.Run()

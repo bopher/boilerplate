@@ -4,25 +4,22 @@ import (
 	"github.com/bopher/cache"
 	"github.com/bopher/cliutils/maintenance"
 	httput "github.com/bopher/http"
-	"github.com/bopher/logger"
 	"github.com/gofiber/fiber/v2"
 )
 
 // SetupWeb driver
 func SetupWeb() {
-	conf := fiber.Config{}
-	conf.DisableStartupMessage = Config().Bool("prod", false)
-	conf.ErrorHandler = httput.ErrorLogger(logger.NewLogger(
-		"2006-01-02 15:04:05",
-		DateFormatter(),
-		logger.NewFileLogger(
-			"./.logs/error",
-			"error",
-			"2006-01-02",
-			DateFormatter(),
-		),
-	), DateFormatter(), Config().Bool("prod", false))
-	server := fiber.New(conf)
+	conf := confOrPanic()
+	onProd := conf.Cast("prod").BoolSafe(true)
+	erLogger := Logger("error_logger")
+	if erLogger == nil {
+		panic("failed to find error_logger")
+	}
+
+	server := fiber.New(fiber.Config{
+		DisableStartupMessage: onProd,
+		ErrorHandler:          httput.ErrorLogger(erLogger, DateFormatter(), onProd),
+	})
 	_container.Register("--APP-SERVER", server)
 
 	_cli.AddCommand(maintenance.DownCommand(func(driver string) cache.Cache {

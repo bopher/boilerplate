@@ -7,12 +7,20 @@ import (
 
 // SetupCrypto driver
 func SetupCrypto() {
-	conf := Config()
-	if c := crypto.NewCryptography(conf.String("key", "")); c != nil {
-		_container.Register("--APP-CRYPTO", c)
+	conf := confOrPanic()
+	if k, err := conf.Cast("key").String(); err == nil {
+		if k == "" {
+			panic("app key cannot be empty")
+		}
+		if c := crypto.NewCryptography(k); c != nil {
+			_container.Register("--APP-CRYPTO", c)
+		} else {
+			panic("failed to build crypto driver")
+		}
 	} else {
-		panic("failed to build crypto driver")
+		panic(err)
 	}
+
 	_cli.AddCommand(ccrypto.HashCommand(func(driver string) crypto.Crypto {
 		return Crypto(driver)
 	}, "--APP-CRYPTO"))

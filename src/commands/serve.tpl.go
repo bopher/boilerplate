@@ -1,7 +1,8 @@
 package commands
 
 import (
-	"__anonymous__/__goapp__/src/app"
+	"fmt"
+	"mekramy/__boiler/src/app"
 
 	"github.com/spf13/cobra"
 )
@@ -11,6 +12,6 @@ var ServeCommand = &cobra.Command{
 	Use:   "serve",
 	Short: "start web server",
 	Run: func(cmd *cobra.Command, args []string) {
-		app.Server().Listen(app.Config().String("web.port", ":8888"))
+		app.Server().Listen(fmt.Sprintf(":%d", app.Config().Cast("web.port").IntSafe(8888)))
 	},
 }

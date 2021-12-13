@@ -1,9 +1,8 @@
 {
+    "prod": false,
     // {{if eq .cache "redis"}}
     "redis": {
         "host": "localhost:6379",
-        "maxIdle": 50,
-        "maxActive": 10000,
         "cache_db": 1
     },
     // {{end}}
@@ -20,8 +19,10 @@
     // {{end}}
     // {{if eq .web "y"}}
     "web": {
-        "port": ":8888"
-    },
+        "ssl": false,
+        "log": true,
+        "port": 8888,
+        "limit": 60
+    }
     // {{end}}
-    "prod": false
 }

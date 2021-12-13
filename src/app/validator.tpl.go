@@ -7,7 +7,9 @@ import (
 
 // SetupValidator driver
 func SetupValidator() {
-	if v := validator.NewValidator(Translator(), "// {{.locale}}"); v != nil {
+	conf := confOrPanic()
+	appLocale := conf.Cast("locale").StringSafe("// {{.locale}}")
+	if v := validator.NewValidator(Translator(), appLocale); v != nil {
 		// {{if eq .locale "fa"}}
 		validations.RegisterExtraValidations(v)
 		// {{end}}

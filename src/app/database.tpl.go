@@ -9,15 +9,15 @@ import (
 // SetupDatabase driver
 func SetupDatabase() {
 	conf := Config()
-	if db, err := database.NewMySQLConnector(
-		conf.String("mysql.host", ""),
-		conf.String("mysql.username", "root"),
-		conf.String("mysql.password", ""),
-		conf.String("database.name", "// {{.name}}"),
-	); err == nil {
+	host := conf.Cast("mysql.host").StringSafe("")
+	username := conf.Cast("mysql.username").StringSafe("root")
+	password := conf.Cast("mysql.password").StringSafe("")
+	db := conf.Cast("database.name").StringSafe("// {{.name}}")
+
+	if db, err := database.NewMySQLConnector(host, username, password, db); err == nil {
 		_container.Register("--APP-DB", db)
 	} else {
-		panic("failed to init database " + err.Error())
+		panic("failed to init mysql database: " + err.Error())
 	}
 
 	_cli.AddCommand(migrations.MigrationCommand(func(driver string) *sqlx.DB {
