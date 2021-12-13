@@ -7,11 +7,14 @@ import (
 	"mekramy/__boiler/src/app"
 	"mekramy/__boiler/src/commands"
 	"mekramy/__boiler/src/config"
+
+	// {{if eq .web "y"}}
 	"mekramy/__boiler/src/http"
 
 	"github.com/bopher/http/middlewares"
 	"github.com/bopher/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	// {{end}}
 )
 
 func main() {

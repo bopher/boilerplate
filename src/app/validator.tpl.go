@@ -2,7 +2,9 @@ package app
 
 import (
 	"github.com/bopher/validator"
+	// {{if eq .locale "fa"}}
 	"github.com/bopher/validator/validations"
+	// {{end}}
 )
 
 // SetupValidator driver

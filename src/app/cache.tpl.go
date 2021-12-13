@@ -2,7 +2,9 @@ package app
 
 import (
 	"github.com/bopher/cache"
+	// {{if eq .cache "redis"}}
 	"github.com/go-redis/redis/v8"
+	// {{end}}
 )
 
 // SetupCache driver
