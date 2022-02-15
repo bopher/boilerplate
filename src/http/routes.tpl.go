@@ -20,7 +20,7 @@ func RegisterRoutes(router *fiber.App) {
 			return c.SendStatus(fiber.StatusTooManyRequests)
 		})) // Accept 60 request in minutes
 	router.Use(func(c *fiber.Ctx) error {
-		if ok := utils.BoolOrPanic(app.IsUnderMaintenance()); !ok {
+		if ok := utils.BoolOrPanic(app.IsUnderMaintenance()); ok {
 			return c.SendStatus(fiber.StatusServiceUnavailable)
 		}
 		return c.Next()

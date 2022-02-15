@@ -7,7 +7,10 @@ import (
 	"github.com/bopher/config"
 	"github.com/bopher/crypto"
 	"github.com/bopher/logger"
+
+	// {{if eq .database "mysql"}}
 	"github.com/jmoiron/sqlx"
+	// {{end}}
 )
 
 func confOrPanic() config.Config {
