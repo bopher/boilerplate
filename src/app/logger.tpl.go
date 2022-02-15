@@ -3,7 +3,6 @@ package app
 import (
 	"os"
 
-	cstorage "github.com/bopher/cliutils/storage"
 	"github.com/bopher/logger"
 )
 
@@ -15,7 +14,7 @@ func SetupLogger() {
 
 	// Crash logger
 	_crLogger := logger.NewLogger("2006-01-02 15:04:05", DateFormatter())
-	_crLogger.AddWriter("main", logger.NewFileLogger(LogPath("error"), "crash", "2006-01-02", DateFormatter()))
+	_crLogger.AddWriter("main", logger.NewFileLogger(LogPath("crash"), "crash", "2006-01-02", DateFormatter()))
 	if onDev {
 		_crLogger.AddWriter("dev", os.Stdout)
 	}
@@ -36,9 +35,6 @@ func SetupLogger() {
 		_logger.AddWriter("dev", os.Stdout)
 	}
 	_container.Register("--APP-LOGGER", _logger)
-
-	// Cli clear command
-	_cli.AddCommand(cstorage.ClearCommand(LogPath()))
 }
 
 // Logger get logger driver
@@ -55,13 +51,4 @@ func Logger(names ...string) logger.Logger {
 		}
 	}
 	return nil
-}
-
-// DateFormatter get default app date formatter
-func DateFormatter() logger.TimeFormatter {
-	// {{if eq .locale "fa"}}
-	return logger.JalaliFormatter
-	// {{else}}
-	return logger.GregorianFormatter
-	// {{end}}
 }

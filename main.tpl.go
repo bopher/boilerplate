@@ -2,19 +2,17 @@ package main
 
 import (
 	"os"
-	"time"
 
 	"mekramy/__boiler/src/app"
 	"mekramy/__boiler/src/commands"
 	"mekramy/__boiler/src/config"
 
-	// {{if eq .web "y"}}
 	"mekramy/__boiler/src/http"
 
+	"github.com/bopher/database/migration"
 	"github.com/bopher/http/middlewares"
 	"github.com/bopher/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	// {{end}}
 )
 
 func main() {
@@ -37,12 +35,9 @@ func main() {
 	defer app.MongoClient().Disconnect(ctx)
 	// {{end}}
 	// {{if eq .web "y"}}
-	limit := app.Config().Cast("web.limit").UInt32Safe(60)
-	log_access := app.Config().Cast("web.log").BoolSafe(false)
-
-	app.SetupWeb()
+	app.SetupWeb(http.OnError)
 	app.Server().Use(recover.New())
-	if log_access {
+	if app.Config().Cast("web.log").BoolSafe(false) {
 		onDev := !app.Config().Cast("prod").BoolSafe(true)
 		appName := app.Config().Cast("name").StringSafe("// {{.name}}")
 		_logger := logger.NewLogger("2006-01-02 15:04:05", app.DateFormatter())
@@ -52,14 +47,21 @@ func main() {
 		}
 		app.Server().Use(middlewares.AccessLogger(_logger))
 	}
-	app.Server().Use(middlewares.Maintenance(app.Cache()))
-	app.Server().Use(middlewares.RateLimiter("GLOBAL-LIMITER", limit, 1*time.Minute, app.Cache()))
 	http.RegisterRoutes(app.Server())
 	app.Server().Static("/", "./public")
-	app.CLI().AddCommand(commands.ServeCommand)
 	// {{end}}
 
-	// Run App
+	// Register commands and run app
+	app.CLI().AddCommand(commands.HashCommand(app.CryptoResolver, "--APP-CRYPTO"))
+	app.CLI().AddCommand(commands.ClearCommand)
+	app.CLI().AddCommand(commands.DownCommand)
+	app.CLI().AddCommand(commands.UpCommand)
 	app.CLI().AddCommand(commands.VersionCommand)
+	// {{if eq .database "mysql"}}
+	app.CLI().AddCommand(migration.MigrationCommand(app.DatabaseResolver, "--APP-DB", "./database/migrations", "./database/seeds"))
+	// {{end}}
+	// {{if eq .web "y"}}
+	app.CLI().AddCommand(commands.ServeCommand)
+	// {{end}}
 	app.Run()
 }

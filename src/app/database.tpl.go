@@ -1,7 +1,6 @@
 package app
 
 import (
-	migrations "github.com/bopher/cliutils/migration"
 	"github.com/bopher/database"
 	"github.com/jmoiron/sqlx"
 )
@@ -19,10 +18,6 @@ func SetupDatabase() {
 	} else {
 		panic("failed to init mysql database: " + err.Error())
 	}
-
-	_cli.AddCommand(migrations.MigrationCommand(func(driver string) *sqlx.DB {
-		return Database(driver)
-	}, "--APP-DB", "./database/migrations", "./database/seeds"))
 }
 
 // Database get database driver

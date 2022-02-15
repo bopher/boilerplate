@@ -1,7 +1,6 @@
 package app
 
 import (
-	ccrypto "github.com/bopher/cliutils/crypto"
 	"github.com/bopher/crypto"
 )
 
@@ -20,10 +19,6 @@ func SetupCrypto() {
 	} else {
 		panic(err)
 	}
-
-	_cli.AddCommand(ccrypto.HashCommand(func(driver string) crypto.Crypto {
-		return Crypto(driver)
-	}, "--APP-CRYPTO"))
 }
 
 // Crypto get crypto driver

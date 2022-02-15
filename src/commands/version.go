@@ -11,6 +11,6 @@ var VersionCommand = &cobra.Command{
 	Use:   "version",
 	Short: "get bopher version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("v1.1.1")
+		fmt.Println("v1.2.0")
 	},
 }

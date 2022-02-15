@@ -3,19 +3,19 @@ module mekramy/__boiler
 go 1.17
 
 require (
-	github.com/bopher/cache v1.2.0
-	github.com/bopher/cli v1.0.1
-	github.com/bopher/cliutils v1.0.2
-	github.com/bopher/config v1.2.4
+	github.com/bopher/cache v1.2.1
+	github.com/bopher/cli v1.0.2
+	github.com/bopher/config v1.2.5
 	github.com/bopher/container v1.1.3
-	github.com/bopher/crypto v1.1.2
-	github.com/bopher/database v1.1.0
-	github.com/bopher/http v1.1.3
-	github.com/bopher/logger v1.2.1
-	github.com/bopher/translator v1.1.1
-	github.com/bopher/validator v1.1.6
+	github.com/bopher/crypto v1.1.3
+	github.com/bopher/database v1.2.1
+	github.com/bopher/http v1.2.1
+	github.com/bopher/logger v1.2.3
+	github.com/bopher/translator v1.1.2
+	github.com/bopher/utils v1.6.4
+	github.com/bopher/validator v1.1.7
 	github.com/go-redis/redis/v8 v8.11.4
-	github.com/gofiber/fiber/v2 v2.26.0
+	github.com/gofiber/fiber/v2 v2.27.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/spf13/cobra v1.3.0
 	go.mongodb.org/mongo-driver v1.8.3
@@ -25,7 +25,6 @@ require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/bopher/caster v1.2.0 // indirect
 	github.com/bopher/jalali v1.1.1 // indirect
-	github.com/bopher/utils v1.6.4 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/gabriel-vasile/mimetype v1.4.0 // indirect
@@ -54,7 +53,7 @@ require (
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/yaa110/go-persian-calendar v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	golang.org/x/crypto v0.0.0-20220210151621-f4118a5b28e2 // indirect
+	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
