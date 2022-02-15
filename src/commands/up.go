@@ -9,7 +9,7 @@ import (
 
 // UpCommand exit app from maintenance mode
 var UpCommand = &cobra.Command{
-	Use:   "down",
+	Use:   "up",
 	Short: "set app status to active mode",
 	Run: func(cmd *cobra.Command, args []string) {
 		cache := app.Cache()
