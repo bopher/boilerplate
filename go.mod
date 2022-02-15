@@ -9,7 +9,7 @@ require (
 	github.com/bopher/container v1.1.3
 	github.com/bopher/crypto v1.1.3
 	github.com/bopher/database v1.2.1
-	github.com/bopher/http v1.2.1
+	github.com/bopher/http v1.2.2
 	github.com/bopher/logger v1.2.3
 	github.com/bopher/translator v1.1.2
 	github.com/bopher/utils v1.6.4
