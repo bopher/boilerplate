@@ -11,6 +11,7 @@ func RegisterRoutes(router *fiber.App) {
 		return c.SendString("Welcome to bopher app")
 	})
 
+	router.Static("/", "./public")
 	// Fallback
 	router.Use(func(c *fiber.Ctx) error {
 		return c.SendStatus(404)

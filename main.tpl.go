@@ -54,7 +54,6 @@ func main() {
 	}
 	http.RegisterGlobalMiddlewares(app.Server())
 	http.RegisterRoutes(app.Server())
-	app.Server().Static("/", "./public")
 	// {{end}}
 
 	// Register commands and run app
