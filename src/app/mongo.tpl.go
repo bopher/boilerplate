@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/bopher/utils"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -64,4 +65,12 @@ func MongoOperationCtx() (context.Context, context.CancelFunc) {
 	conf := Config()
 	ttl := conf.Cast("database.ttl").IntSafe(10)
 	return context.WithTimeout(context.TODO(), time.Duration(ttl)*time.Second)
+}
+
+// MongoSession create mongo session
+func MongoSession() (mongo.Session, context.Context, context.CancelFunc) {
+	session, err := MongoClient().StartSession()
+	utils.PanicOnError(err)
+	ctx, cancel := MongoOperationCtx()
+	return session, ctx, cancel
 }

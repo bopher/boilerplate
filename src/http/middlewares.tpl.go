@@ -12,19 +12,22 @@ import (
 // RegisterGlobalMiddlewares register global app middlewares routes
 func RegisterGlobalMiddlewares(router *fiber.App) {
 	// Global Middlewares
-	router.Use(middlewares.RateLimiter(
-		"GLOBAL-LIMITER",
-		app.Config().Cast("web.limit").UInt32Safe(60),
-		time.Minute,
-		app.Cache(), func(c *fiber.Ctx) error {
-			return c.SendStatus(fiber.StatusTooManyRequests)
-		})) // Accept 60 request in minutes
 	router.Use(func(c *fiber.Ctx) error {
 		if ok := utils.BoolOrPanic(app.IsUnderMaintenance()); ok {
 			return c.SendStatus(fiber.StatusServiceUnavailable)
 		}
 		return c.Next()
 	}) // Maintenance mode
+	router.Use(middlewares.RateLimiter(
+		"GLOBAL-LIMITER",
+		app.Config().Cast("web.limit").UInt32Safe(60),
+		time.Minute,
+		app.Cache(), func(c *fiber.Ctx) error {
+			return c.SendStatus(fiber.StatusTooManyRequests)
+		},
+		[]string{}, // methods to include only
+		[]string{}, // path patterns to ignore
+	)) // Accept 60 request in minutes
 	// router.Use(middlewares.CSRFMiddleware(mySession))
 	// router.Use(middlewares.JSONOnly(nil))
 }
