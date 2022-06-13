@@ -12,7 +12,6 @@ func RegisterRoutes(router *fiber.App) {
 	})
 
 	// Fallback
-	router.Static("/", "./public")
 	router.Use(func(c *fiber.Ctx) error {
 		return c.SendStatus(404)
 	})

@@ -13,7 +13,7 @@ import (
 func RegisterGlobalMiddlewares(router *fiber.App) {
 	// Global Middlewares
 	router.Use(func(c *fiber.Ctx) error {
-		if ok := utils.BoolOrPanic(app.IsUnderMaintenance()); ok {
+		if ok := utils.VarOrPanic[bool](app.IsUnderMaintenance()); ok {
 			return c.SendStatus(fiber.StatusServiceUnavailable)
 		}
 		return c.Next()
@@ -28,6 +28,4 @@ func RegisterGlobalMiddlewares(router *fiber.App) {
 		[]string{}, // methods to include only
 		[]string{}, // path patterns to ignore
 	)) // Accept 60 request in minutes
-	// router.Use(middlewares.CSRFMiddleware(mySession))
-	// router.Use(middlewares.JSONOnly(nil))
 }

@@ -52,6 +52,7 @@ func main() {
 		}
 		app.Server().Use(middlewares.AccessLogger(_logger))
 	}
+	app.Server().Static("/", "./public")
 	http.RegisterGlobalMiddlewares(app.Server())
 	http.RegisterRoutes(app.Server())
 	// {{end}}

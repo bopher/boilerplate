@@ -21,6 +21,16 @@ func Container() container.Container {
 	return _container
 }
 
+// Resolve get app dependency
+func Resolve[T any](name string, fallback T) (T, bool) {
+	if dep, exists := _container.Resolve(name); exists {
+		if res, ok := dep.(T); ok {
+			return res, true
+		}
+	}
+	return fallback, false
+}
+
 // CLI get app main cli
 func CLI() cli.CLI {
 	return _cli
